@@ -10,7 +10,6 @@ from kafka import KafkaConsumer
 
 consumer = KafkaConsumer("finnhub", bootstrap_servers='localhost:9092', group_id="finnhub")
 for message in consumer:
-        station = json.loads(message.value.decode())
-        price = station['c']
+        item = json.loads(message.value.decode())
+        price = item['c']
         print(price)
-        #print(station)

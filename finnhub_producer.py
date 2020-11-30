@@ -17,12 +17,8 @@ producer = KafkaProducer(bootstrap_servers="localhost:9092")
 
 while True:
     response = urllib.request.urlopen(url)
-    stations = json.loads(response.read().decode())
-    #print(stations)
-    """
-    for station in stations:
-        producer.send("finnhub", json.dumps(station).encode())
-    """
-    producer.send("finnhub", json.dumps(stations).encode())
-    print("{} Produced {} station records".format(time.time(), len(stations)))
+    value = json.loads(response.read().decode())
+
+    producer.send("finnhub", json.dumps(value).encode())
+    print("{} Produced {} value records".format(time.time(), len(value)))
     time.sleep(1)
