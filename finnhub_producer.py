@@ -5,7 +5,8 @@ Created on Mon Nov 30 16:16:52 2020
 @author: Alex
 """
 
-import json                                                                                                 import time
+import json                                                                                                
+import time
 import urllib.request
 
 from kafka import KafkaProducer
