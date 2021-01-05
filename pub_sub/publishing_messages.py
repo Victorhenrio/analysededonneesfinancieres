@@ -40,7 +40,7 @@ def publish_data_to_GCP(data):
     future = publisher.publish(topic_path, data.encode('utf-8'))
     print(future.result())
     
-    print(f"Published some messages to {topic_path}.")
+    print(f"Published somes messages to {topic_path}.")
 
 if __name__ == "__main__":
     websocket.enableTrace(True)
