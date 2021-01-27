@@ -4,7 +4,7 @@
 		module="scala-spark-boilerplate$sources"
 		revision="0.1"
 		status="integration"
-		publication="20210124190223"
+		publication="20210127141249"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>
