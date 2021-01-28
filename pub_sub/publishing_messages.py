@@ -20,17 +20,14 @@ def on_close(ws):
     print("### closed ###")
 
 def on_open(ws):
-    ws.send('{"type":"subscribe","symbol":"AAPL"}')
-    ws.send('{"type":"subscribe","symbol":"AMZN"}')
     ws.send('{"type":"subscribe","symbol":"BINANCE:BTCUSDT"}')
-    ws.send('{"type":"subscribe","symbol":"IC MARKETS:1"}')
-
+  
 
 def publish_data_to_GCP(data):
     #TODO(developer)
     print("#"*30)
-    project_id = "utility-destiny-300118"
-    topic_id = "my-topic"
+    project_id = "pfe-data-finance"
+    topic_id = "BTC-sub"
     
     publisher = pubsub_v1.PublisherClient()
     # The `topic_path` method creates a fully qualified identifier
