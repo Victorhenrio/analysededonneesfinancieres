@@ -9,11 +9,16 @@ import org.apache.spark.streaming.pubsub.SparkGCPCredentials
 import org.apache.spark.streaming.pubsub.SparkPubsubMessage
 import org.apache.spark.streaming.Milliseconds
 import org.apache.spark.streaming.StreamingContext
-import org.apache.spark.SparkConf
+import org.apache.spark.{SparkConf, SparkContext, rdd}
 import org.apache.spark.sql.DataFrame
 import java.nio.charset.StandardCharsets
 
-import org.apache.spark.sql.types.{DateType, IntegerType}
+import org.apache.spark.sql._
+import org.apache.spark.sql.functions._
+import com.databricks.spark.avro._
+import org.apache.spark.rdd.RDD
+import org.json4s.jackson.Json
+
 
 
 
@@ -44,22 +49,59 @@ object Pubsub_Actions {
     val sparkConf = new SparkConf().setAppName("PubsubWordCount").setMaster("local[*]")
     val ssc = new StreamingContext(sparkConf, Milliseconds(2000))
 
+
     val pubsubStream: DStream[String] = PubsubUtils.createStream(
       ssc, "PFE-data-finance", None, "BTC-sub",
-      SparkGCPCredentials.builder.build(), StorageLevel.MEMORY_ONLY).map(message => new String(message.getData(),StandardCharsets.UTF_8))
-
-    //   val test = pubsubStream.foreachRDD(rdd => {rdd.take(3)})
-
-    val test = pubsubStream.foreachRDD(rdd => rdd.foreach(println))
+      SparkGCPCredentials.builder.build(), StorageLevel.MEMORY_ONLY)
+      .map(message => new String(message.getData(),StandardCharsets.UTF_8))
 
 
+    val streamprocess =   pubsubStream.foreachRDD { (rdd: RDD[String]) =>
 
-    //val wordCounts = pubsubStream.collect().foreach(println)
-    //wordCounts.print()
+      // Get the singleton instance of SparkSession
+      val sqlContext = SQLContext.getOrCreate(rdd.sparkContext)
+      import sqlContext.implicits._
+      // Convert RDD[String] to DataFrame
+      val wordsDataFrame = sqlContext.read.json(rdd)
+      //wordsDataFrame.show()
+
+      if (wordsDataFrame.rdd.isEmpty != true) {
+        wordsDataFrame.printSchema()
+        //wordsDataFrame.show()
+
+        val df2 = wordsDataFrame.select(explode(col("data")).as("data")).select("data.*")
+        //df2.show(false)
+
+        val df3 = df2.withColumn("date", to_utc_timestamp(from_unixtime(col("t") / 1000, "yyyy-MM-dd HH:mm:ss.SSS"), "EST"))
+        df3.show()
+      }
+    }
+
     ssc.start()
     ssc.awaitTermination()
   }
 
+}
+
+
+/** Case class for converting RDD to DataFrame */
+case class Message(data: Json)
+
+
+/** Lazily instantiated singleton instance of SparkSession */
+object SparkSessionSingleton {
+
+  @transient  private var instance: SparkSession = _
+
+  def getInstance(sparkConf: SparkConf): SparkSession = {
+    if (instance == null) {
+      instance = SparkSession
+        .builder
+        .config(sparkConf)
+        .getOrCreate()
+    }
+    instance
+  }
 }
 
 // scalastyle:on

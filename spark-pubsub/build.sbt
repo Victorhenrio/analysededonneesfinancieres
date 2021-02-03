@@ -14,6 +14,9 @@ libraryDependencies += "org.apache.spark" %% "spark-sql" % "2.2.0"
 libraryDependencies += "io.spray" %% "spray-json" % "1.3.2"
 libraryDependencies += "org.apache.spark" %% "spark-streaming" % "2.2.1"
 libraryDependencies += "org.apache.bahir" %% "spark-streaming-pubsub" % "2.2.0"
+libraryDependencies += "com.databricks" %% "spark-avro" % "4.0.0"
+
+
 
 assemblyMergeStrategy in assembly := {
   case PathList("META-INF", xs @ _*) => MergeStrategy.discard
