@@ -21,13 +21,13 @@ def on_close(ws):
 
 def on_open(ws):
     ws.send('{"type":"subscribe","symbol":"BINANCE:BTCUSDT"}')
-  
+
 
 def publish_data_to_GCP(data):
     #TODO(developer)
     print("#"*30)
-    project_id = "pfe-data-finance"
-    topic_id = "BTC-sub"
+    project_id = "pfe-data-finnhub"
+    topic_id = "finnhub-finance"
     
     publisher = pubsub_v1.PublisherClient()
     # The `topic_path` method creates a fully qualified identifier
@@ -37,7 +37,7 @@ def publish_data_to_GCP(data):
     future = publisher.publish(topic_path, data.encode('utf-8'))
     print(future.result())
     
-    print(f"Published some messages to {topic_path}.")
+    print(f"Published messages to {topic_path}.")
 
 if __name__ == "__main__":
     websocket.enableTrace(True)
