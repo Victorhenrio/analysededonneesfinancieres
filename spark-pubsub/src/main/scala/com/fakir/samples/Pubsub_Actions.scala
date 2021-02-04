@@ -46,7 +46,7 @@ object Pubsub_Actions {
 
     //val Seq(projectId, subscription) = args.toSeq
 
-    val sparkConf = new SparkConf().setAppName("PubsubWordCount").setMaster("local[*]")
+    val sparkConf = new SparkConf().setAppName("PubsubAction").setMaster("local[*]")
     val ssc = new StreamingContext(sparkConf, Milliseconds(2000))
 
 
