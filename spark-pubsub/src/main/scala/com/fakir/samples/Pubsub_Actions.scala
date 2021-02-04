@@ -51,7 +51,7 @@ object Pubsub_Actions {
 
 
     val pubsubStream: DStream[String] = PubsubUtils.createStream(
-      ssc, "PFE-data-finance", None, "BTC-sub",
+      ssc, "PFE-Data-Finnhub", None, "BTC-sub",
       SparkGCPCredentials.builder.build(), StorageLevel.MEMORY_ONLY)
       .map(message => new String(message.getData(),StandardCharsets.UTF_8))
 
@@ -74,6 +74,8 @@ object Pubsub_Actions {
 
         val df3 = df2.withColumn("date", to_utc_timestamp(from_unixtime(col("t") / 1000, "yyyy-MM-dd HH:mm:ss.SSS"), "EST"))
         df3.show()
+
+        //df3.write.format("text").save("C:\\Users\\Alex\\Documents\\Cours_ESME\\Year5\\PFE\\analysededonneesfinancieres\\spark-pubsub\\spark-warehouse")
       }
     }
 
@@ -81,27 +83,6 @@ object Pubsub_Actions {
     ssc.awaitTermination()
   }
 
-}
-
-
-/** Case class for converting RDD to DataFrame */
-case class Message(data: Json)
-
-
-/** Lazily instantiated singleton instance of SparkSession */
-object SparkSessionSingleton {
-
-  @transient  private var instance: SparkSession = _
-
-  def getInstance(sparkConf: SparkConf): SparkSession = {
-    if (instance == null) {
-      instance = SparkSession
-        .builder
-        .config(sparkConf)
-        .getOrCreate()
-    }
-    instance
-  }
 }
 
 // scalastyle:on
