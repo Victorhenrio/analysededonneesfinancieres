@@ -1,7 +1,7 @@
 // scalastyle:off println
 package com.fakir.samples
 
-
+import com.fakir.samples.PubSubServices._
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.dstream.{DStream, ReceiverInputDStream}
 import org.apache.spark.streaming.pubsub.PubsubUtils
@@ -12,6 +12,7 @@ import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.{SparkConf, SparkContext, rdd}
 import org.apache.spark.sql.DataFrame
 import java.nio.charset.StandardCharsets
+import java.util.concurrent.Executors
 
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
@@ -19,7 +20,8 @@ import com.databricks.spark.avro._
 import org.apache.spark.rdd.RDD
 import org.json4s.jackson.Json
 
-
+import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.Duration
 
 
 /**
@@ -49,40 +51,26 @@ object Pubsub_Actions {
     val sparkConf = new SparkConf().setAppName("PubsubAction").setMaster("local[*]")
     val ssc = new StreamingContext(sparkConf, Milliseconds(2000))
 
+    implicit val ec = new ExecutionContext {
+      val threadPool = Executors.newCachedThreadPool()
 
-    val pubsubStream: DStream[String] = PubsubUtils.createStream(
-      ssc, "PFE-Data-Finnhub", None, "BTC-sub",
-      SparkGCPCredentials.builder.build(), StorageLevel.MEMORY_ONLY)
-      .map(message => new String(message.getData(),StandardCharsets.UTF_8))
-
-
-    val streamprocess =   pubsubStream.foreachRDD { (rdd: RDD[String]) =>
-
-      // Get the singleton instance of SparkSession
-      val sqlContext = SQLContext.getOrCreate(rdd.sparkContext)
-      import sqlContext.implicits._
-      // Convert RDD[String] to DataFrame
-      val wordsDataFrame = sqlContext.read.json(rdd)
-      //wordsDataFrame.show()
-
-      if (wordsDataFrame.rdd.isEmpty != true) {
-        wordsDataFrame.printSchema()
-        //wordsDataFrame.show()
-
-        val df2 = wordsDataFrame.select(explode(col("data")).as("data")).select("data.*")
-        //df2.show(false)
-
-        val df3 = df2.withColumn("date", to_utc_timestamp(from_unixtime(col("t") / 1000, "yyyy-MM-dd HH:mm:ss.SSS"), "EST"))
-        df3.show()
-
-        //df3.write.format("text").save("C:\\Users\\Alex\\Documents\\Cours_ESME\\Year5\\PFE\\analysededonneesfinancieres\\spark-pubsub\\spark-warehouse")
+      def execute(runnable: Runnable) {
+        threadPool.submit(runnable)
       }
+
+      def reportFailure(t: Throwable) {}
     }
 
-    ssc.start()
-    ssc.awaitTermination()
+
+    readPubSub(ssc,"pfe-data-finnhub","BTC-topic-sub")
+    readPubSub(ssc,"pfe-data-finnhub","ETH-topic-sub")
+
+
   }
 
+
 }
+
+
 
 // scalastyle:on
