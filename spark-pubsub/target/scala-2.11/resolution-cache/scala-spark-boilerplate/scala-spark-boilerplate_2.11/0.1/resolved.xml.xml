@@ -4,7 +4,7 @@
 		module="scala-spark-boilerplate_2.11"
 		revision="0.1"
 		status="integration"
-		publication="20210209174910"
+		publication="20210211175050"
 	>
 		<description>
 		scala-spark-boilerplate
