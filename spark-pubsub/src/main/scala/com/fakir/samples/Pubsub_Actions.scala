@@ -51,18 +51,9 @@ object Pubsub_Actions {
     val sparkConf = new SparkConf().setAppName("PubsubAction").setMaster("local[*]")
     val ssc = new StreamingContext(sparkConf, Milliseconds(2000))
 
-    implicit val ec = new ExecutionContext {
-      val threadPool = Executors.newCachedThreadPool()
-
-      def execute(runnable: Runnable) {
-        threadPool.submit(runnable)
-      }
-
-      def reportFailure(t: Throwable) {}
-    }
-
 
     readPubSub(ssc,"pfe-data-finnhub","BTC-topic-sub")
+    println("#################################")
     readPubSub(ssc,"pfe-data-finnhub","ETH-topic-sub")
 
 
