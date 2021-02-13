@@ -10,6 +10,7 @@ import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.{SparkConf, SparkContext, rdd}
 import org.apache.spark.sql.DataFrame
 import java.nio.charset.StandardCharsets
+import com.mongodb.spark.sql._
 
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions.{mean, _}
@@ -52,9 +53,15 @@ object PubSubServices {
           ,sum("v").as("Volume"))
 
         df4.show()
+        import spark.implicits._
+        val spark = SparkSession.builder()
+          .master("local")
+          .appName("MongoSparkConnectorIntro")
+          .config("spark.mongodb.input.uri", "mongodb://root:toto@34.94.185.118:27017/test.collection?authSource=admin")
+          .config("spark.mongodb.output.uri", "mongodb://root:toto@34.94.185.118:27017/test.collection?authSource=admin")
+          .getOrCreate()
 
-
-        //df3.coalesce(1).write.mode("append").format("json").save("alldata.json")
+        df4.write.mode("append").mongo()
 
 
       }
@@ -63,3 +70,5 @@ object PubSubServices {
     ssc.awaitTermination()
   }
 }
+
+//case class df4(word: String, count: Int)
