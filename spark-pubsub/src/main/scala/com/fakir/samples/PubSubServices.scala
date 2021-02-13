@@ -32,10 +32,15 @@ object PubSubServices {
 
     val streamprocess = pubsubStream.foreachRDD { (rdd: RDD[String]) =>
 
-      val sqlContext = SQLContext.getOrCreate(rdd.sparkContext)
-      import sqlContext.implicits._
+      val spark = SparkSession.builder()
+        .master("local")
+        .appName("MongoSparkConnectorIntro")
+        .config("spark.mongodb.input.uri", "mongodb://root:toto@34.94.185.118:27017/totor.collection?authSource=admin")
+        .config("spark.mongodb.output.uri", "mongodb://root:toto@34.94.185.118:27017/totor.collection?authSource=admin")
+        .getOrCreate()
+
       // Convert RDD[String] to DataFrame
-      val wordsDataFrame = sqlContext.read.json(rdd)
+      val wordsDataFrame = spark.read.json(rdd)
       wordsDataFrame.show()
 
       if (wordsDataFrame.rdd.isEmpty != true) {
@@ -54,8 +59,9 @@ object PubSubServices {
           ,mean("t").as("Timestamp")
           ,sum("v").as("Volume"))
 
-        df4.show()
-        mongoread(df4)
+        //df4.show()
+        df4.write.mode("append").mongo()
+        //mongoread(df4)
 
 
       }
