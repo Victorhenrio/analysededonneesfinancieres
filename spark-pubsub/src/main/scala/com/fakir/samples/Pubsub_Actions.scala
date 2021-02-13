@@ -52,9 +52,9 @@ object Pubsub_Actions {
     val ssc = new StreamingContext(sparkConf, Milliseconds(2000))
 
 
-    readPubSub(ssc,"pfe-data-finnhub","BTC-topic-sub")
-    println("#################################")
-    readPubSub(ssc,"pfe-data-finnhub","ETH-topic-sub")
+    readPubSub(ssc,"PFE-Data-finnhub","crypto-sub")
+    //println("#################################")
+    //readPubSub(ssc,"PFE-Data-finnhub","ETH-topic-sub")
 
 
   }
