@@ -12,11 +12,13 @@ import org.apache.spark.sql.DataFrame
 import java.nio.charset.StandardCharsets
 import com.mongodb.spark.sql._
 
+import com.fakir.samples.MongoWithPubSub.mongoread
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions.{mean, _}
 import com.databricks.spark.avro._
 import org.apache.spark.rdd.RDD
 import org.json4s.jackson.Json
+
 
 object PubSubServices {
 
@@ -53,15 +55,7 @@ object PubSubServices {
           ,sum("v").as("Volume"))
 
         df4.show()
-        import spark.implicits._
-        val spark = SparkSession.builder()
-          .master("local")
-          .appName("MongoSparkConnectorIntro")
-          .config("spark.mongodb.input.uri", "mongodb://root:toto@34.94.185.118:27017/test.collection?authSource=admin")
-          .config("spark.mongodb.output.uri", "mongodb://root:toto@34.94.185.118:27017/test.collection?authSource=admin")
-          .getOrCreate()
-
-        df4.write.mode("append").mongo()
+        mongoread(df4)
 
 
       }
