@@ -52,14 +52,14 @@ object PubSubServices {
 
         val df3 = df2.withColumn("date", to_utc_timestamp(from_unixtime(col("t") / 1000, "yyyy-MM-dd HH:mm:ss"), "Europe/Paris"))
         val df4 = df3.withColumn("new_time",round(col("t")/1000,0))
-        df4.show()
+        val df5 = df4.withColumn("Symbol",col("s"))
 
 
-        val df5 = df4.groupBy("new_time","s").agg(mean("p").as("Price")
-          ,sum("v").as("Volume"))
+        val df6 = df5.groupBy("new_time","Symbol").agg(mean("p").as("Price")
+          ,sum("v").as("Volume"),(col("new_time")*1000).as("Time_updated"))
 
-        df5.show()
-        df5.write.mode("append").mongo()
+        df6.show()
+        df6.write.mode("append").mongo()
         //mongoread(df4)
 
 
