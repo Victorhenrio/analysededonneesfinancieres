@@ -50,17 +50,16 @@ object PubSubServices {
         val df2 = wordsDataFrame.select(explode(col("data")).as("data")).select("data.*")
         //df2.show(false)
 
-        val df3 = df2.withColumn("date", to_utc_timestamp(from_unixtime(col("t") / 1000, "yyyy-MM-dd HH:mm:ss.SSS"), "EST"))
-        df3.show()
+        val df3 = df2.withColumn("date", to_utc_timestamp(from_unixtime(col("t") / 1000, "yyyy-MM-dd HH:mm:ss"), "Europe/Paris"))
+        val df4 = df3.withColumn("new_time",round(col("t")/1000,0))
+        df4.show()
 
-        println("New DF :")
 
-        val df4 = df3.groupBy("date","s").agg(mean("p").as("Price")
-          ,mean("t").as("Timestamp")
+        val df5 = df4.groupBy("new_time","s").agg(mean("p").as("Price")
           ,sum("v").as("Volume"))
 
-        //df4.show()
-        df4.write.mode("append").mongo()
+        df5.show()
+        df5.write.mode("append").mongo()
         //mongoread(df4)
 
 
