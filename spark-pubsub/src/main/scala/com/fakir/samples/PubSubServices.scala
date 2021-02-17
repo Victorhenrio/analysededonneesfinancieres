@@ -10,12 +10,13 @@ import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.{SparkConf, SparkContext, rdd}
 import org.apache.spark.sql.DataFrame
 import java.nio.charset.StandardCharsets
-import com.mongodb.spark.sql._
 
+import com.mongodb.spark.sql._
 import com.fakir.samples.MongoWithPubSub.mongoread
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions.{mean, _}
 import com.databricks.spark.avro._
+import com.mongodb.spark.MongoSpark
 import org.apache.spark.rdd.RDD
 import org.json4s.jackson.Json
 
@@ -35,8 +36,8 @@ object PubSubServices {
       val spark = SparkSession.builder()
         .master("local")
         .appName("MongoSparkConnectorIntro")
-        .config("spark.mongodb.input.uri", "mongodb://root:toto@34.94.185.118:27017/totor.collection?authSource=admin")
-        .config("spark.mongodb.output.uri", "mongodb://root:toto@34.94.185.118:27017/totor.collection?authSource=admin")
+        .config("spark.mongodb.input.uri", "mongodb://root:toto@34.94.185.118:27017/newdb.collection?authSource=admin")
+        .config("spark.mongodb.output.uri", "mongodb://root:toto@34.94.185.118:27017/newdb.collection?authSource=admin")
         .getOrCreate()
 
       // Convert RDD[String] to DataFrame
@@ -47,20 +48,27 @@ object PubSubServices {
         wordsDataFrame.printSchema()
         //wordsDataFrame.show()
 
-        val df2 = wordsDataFrame.select(explode(col("data")).as("data")).select("data.*")
+        val dataDF = wordsDataFrame.select(explode(col("data")).as("data")).select("data.*")
         //df2.show(false)
 
-        val df3 = df2.withColumn("date", to_utc_timestamp(from_unixtime(col("t") / 1000, "yyyy-MM-dd HH:mm:ss"), "Europe/Paris"))
-        val df4 = df3.withColumn("new_time",round(col("t")/1000,0))
-        val df5 = df4.withColumn("symbol",col("s"))
+        val dfWithDate = dataDF.withColumn("date", to_utc_timestamp(from_unixtime(col("t") / 1000, "yyyy-MM-dd HH:mm:ss"), "Europe/Paris"))
+        val dfNewTime = dfWithDate.withColumn("new_time",round(col("t")/1000,0))
+        val fullDF = dfNewTime.withColumn("symbol",col("s"))
+        //df5.show()
 
-
-        val df6 = df5.groupBy("new_time","symbol").agg(mean("p").as("price")
+        val groupedDF = fullDF.groupBy("new_time","symbol").agg(mean("p").as("price")
           ,sum("v").as("volume"),(col("new_time")*1000).as("time_updated"))
 
-        df6.show()
-        df6.write.mode("append").mongo()
-        //mongoread(df4)
+        //df6.show()
+        groupedDF.write.mode("append").mongo()
+
+
+        // Read from Mongo
+
+        val mongoRDD = MongoSpark.load(spark)
+
+        val mongoDF = mongoRDD.toDF()
+        mongoDF.show()
 
 
       }
