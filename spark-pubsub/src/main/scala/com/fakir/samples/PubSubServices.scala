@@ -55,7 +55,7 @@ object PubSubServices {
         val df5 = df4.withColumn("symbol",col("s"))
 
 
-        val df6 = df5.groupBy("new_time","Symbol").agg(mean("p").as("price")
+        val df6 = df5.groupBy("new_time","symbol").agg(mean("p").as("price")
           ,sum("v").as("volume"),(col("new_time")*1000).as("time_updated"))
 
         df6.show()
