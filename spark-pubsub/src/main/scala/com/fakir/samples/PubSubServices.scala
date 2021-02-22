@@ -20,9 +20,11 @@ import com.mongodb.spark.MongoSpark
 import org.apache.spark.rdd.RDD
 import org.json4s.jackson.Json
 
+import scala.math.BigDecimal.long2bigDecimal
+
 
 object PubSubServices {
-
+  var compteur = 0
   def readPubSub(ssc: StreamingContext,project:String,subscription:String): Unit = {
 
     val pubsubStream: DStream[String] = PubsubUtils.createStream(
@@ -42,7 +44,7 @@ object PubSubServices {
 
       // Convert RDD[String] to DataFrame
       val wordsDataFrame = spark.read.json(rdd)
-      wordsDataFrame.show()
+      //wordsDataFrame.show()
 
       if (wordsDataFrame.rdd.isEmpty != true) {
         wordsDataFrame.printSchema()
@@ -59,18 +61,38 @@ object PubSubServices {
         val groupedDF = fullDF.groupBy("new_time","symbol").agg(mean("p").as("price")
           ,sum("v").as("volume"),(col("new_time")*1000).as("time_updated"))
 
-        //df6.show()
+        groupedDF.select("time_updated").show()
+
         groupedDF.write.mode("append").mongo()
 
 
         // Read from Mongo
 
-        val mongoRDD = MongoSpark.load(spark)
+        //val mongoRDD = MongoSpark.load(spark)
 
-        val mongoDF = mongoRDD.toDF()
-        mongoDF.show()
+       // val mongoDF = mongoRDD.toDF()
+        //mongoDF.show()
 
+        val currentTime = System.currentTimeMillis
+        val currentTimeDecimal = (currentTime/1000).setScale(0)
+        val currentTimeInSeconds = currentTimeDecimal*1000 - 360000
 
+        println(currentTimeInSeconds)
+
+        compteur = compteur + 1
+        println("Compteur value : " , compteur)
+
+        if (compteur>1){
+          val mongoRDDTest = MongoSpark.load(spark)
+          val mongoDFtest = mongoRDDTest.toDF()
+
+          println("ca se passe ici")
+          println(currentTimeInSeconds-1000)
+          mongoDFtest.filter(mongoDFtest("time_updated") > currentTimeInSeconds-60000).show()
+
+          println("mais pas la")
+          mongoDFtest.select("price").show()
+        }
       }
     }
     ssc.start()
