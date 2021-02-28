@@ -2,26 +2,11 @@
 package com.fakir.samples
 
 import com.fakir.samples.PubSubServices._
-import org.apache.spark.storage.StorageLevel
-import org.apache.spark.streaming.dstream.{DStream, ReceiverInputDStream}
-import org.apache.spark.streaming.pubsub.PubsubUtils
-import org.apache.spark.streaming.pubsub.SparkGCPCredentials
-import org.apache.spark.streaming.pubsub.SparkPubsubMessage
+import org.apache.spark.sql.AnalysisException
 import org.apache.spark.streaming.Milliseconds
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.{SparkConf, SparkContext, rdd}
-import org.apache.spark.sql.DataFrame
-import java.nio.charset.StandardCharsets
-import java.util.concurrent.Executors
-
-import org.apache.spark.sql._
-import org.apache.spark.sql.functions._
-import com.databricks.spark.avro._
-import org.apache.spark.rdd.RDD
-import org.json4s.jackson.Json
-
-import scala.concurrent.ExecutionContext
-import scala.concurrent.duration.Duration
+import java.io._
 
 
 /**
@@ -43,6 +28,7 @@ import scala.concurrent.duration.Duration
  *      org.apache.spark.examples.streaming.pubsub.PubsubWordCount project_1 subscription_1
  *
  */
+
 object Pubsub_Actions {
   def main(args: Array[String]): Unit = {
 
@@ -51,10 +37,14 @@ object Pubsub_Actions {
     val sparkConf = new SparkConf().setAppName("PubsubAction").setMaster("local[*]")
     val ssc = new StreamingContext(sparkConf, Milliseconds(2000))
 
-
-    readPubSub(ssc,"PFE-Data-finnhub","crypto-sub")
-    //println("#################################")
-    //readPubSub(ssc,"PFE-Data-finnhub","ETH-topic-sub")
+    try {
+      readPubSub(ssc,"PFE-Data-finnhub","crypto-sub")
+    } catch {
+      case e: AnalysisException => println("Had an Analysis Exception trying to read pubsub")
+      val pw = new PrintWriter(new File("Exception.txt" ))
+      pw.write(e.message)
+      pw.close
+    }
 
 
   }
