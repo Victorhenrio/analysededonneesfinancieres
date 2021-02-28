@@ -1,4 +1,4 @@
-package com.fakir.samples
+package com.samples
 
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.dstream.{DStream}

@@ -1,7 +1,7 @@
 // scalastyle:off println
-package com.fakir.samples
+package com.samples
 
-import com.fakir.samples.PubSubServices._
+import PubSubServices._
 import org.apache.spark.sql.AnalysisException
 import org.apache.spark.streaming.Milliseconds
 import org.apache.spark.streaming.StreamingContext
