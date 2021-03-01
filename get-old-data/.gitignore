@@ -1,0 +1,3 @@
+target/*
+project/target/*
+target/scala-2.11/scala-spark-pubsub-mongodb_2.11-2.2.0_0.1.jar
