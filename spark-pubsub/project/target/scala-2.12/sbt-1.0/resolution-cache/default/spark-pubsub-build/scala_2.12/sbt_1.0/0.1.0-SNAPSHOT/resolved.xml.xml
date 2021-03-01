@@ -4,7 +4,7 @@
 		module="spark-pubsub-build"
 		revision="0.1.0-SNAPSHOT"
 		status="integration"
-		publication="20210226222954"
+		publication="20210301094900"
 		e:sbtVersion="1.0" e:scalaVersion="2.12"
 	>
 		<description>
