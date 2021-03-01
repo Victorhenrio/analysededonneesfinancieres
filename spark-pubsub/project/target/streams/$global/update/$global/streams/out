@@ -16153,3 +16153,24 @@
 [debug] 	public [ibiblio]
 [debug] 	main [chain] [shared, public]
 [debug] 	local [file]
+[debug] 	[NOT REQUIRED] org.scala-sbt#zinc-compile_2.12;1.1.3!zinc-compile_2.12.jar
+[debug] 	[NOT REQUIRED] org.apache.logging.log4j#log4j-slf4j-impl;2.8.1!log4j-slf4j-impl.jar
+[debug] 	[NOT REQUIRED] org.ow2.asm#asm-tree;6.0!asm-tree.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#util-relation_2.12;1.1.3!util-relation_2.12.jar
+[debug] 	[NOT REQUIRED] com.github.cb372#scalacache-caffeine_2.12;0.20.0!scalacache-caffeine_2.12.jar
+[debug] 	[NOT REQUIRED] org.apache.maven#maven-model;3.3.9!maven-model.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#io_2.12;1.1.4!io_2.12.jar
+[debug] :: resolution report :: resolve 4497ms :: artifacts dl 4708ms
+[debug] 	report for default#spark-pubsub-build;0.1.0-SNAPSHOT compile produced in C:\Users\Victor HENRIO\Documents\PFE\analysededonneesfinancieres\spark-pubsub\project\target\scala-2.12\sbt-1.0\resolution-cache\reports\default-spark-pubsub-build-compile.xml
+[debug] 	report for default#spark-pubsub-build;0.1.0-SNAPSHOT runtime produced in C:\Users\Victor HENRIO\Documents\PFE\analysededonneesfinancieres\spark-pubsub\project\target\scala-2.12\sbt-1.0\resolution-cache\reports\default-spark-pubsub-build-runtime.xml
+[debug] 	report for default#spark-pubsub-build;0.1.0-SNAPSHOT test produced in C:\Users\Victor HENRIO\Documents\PFE\analysededonneesfinancieres\spark-pubsub\project\target\scala-2.12\sbt-1.0\resolution-cache\reports\default-spark-pubsub-build-test.xml
+[debug] 	report for default#spark-pubsub-build;0.1.0-SNAPSHOT provided produced in C:\Users\Victor HENRIO\Documents\PFE\analysededonneesfinancieres\spark-pubsub\project\target\scala-2.12\sbt-1.0\resolution-cache\reports\default-spark-pubsub-build-provided.xml
+[debug] 	report for default#spark-pubsub-build;0.1.0-SNAPSHOT optional produced in C:\Users\Victor HENRIO\Documents\PFE\analysededonneesfinancieres\spark-pubsub\project\target\scala-2.12\sbt-1.0\resolution-cache\reports\default-spark-pubsub-build-optional.xml
+[debug] 	report for default#spark-pubsub-build;0.1.0-SNAPSHOT compile-internal produced in C:\Users\Victor HENRIO\Documents\PFE\analysededonneesfinancieres\spark-pubsub\project\target\scala-2.12\sbt-1.0\resolution-cache\reports\default-spark-pubsub-build-compile-internal.xml
+[debug] 	report for default#spark-pubsub-build;0.1.0-SNAPSHOT runtime-internal produced in C:\Users\Victor HENRIO\Documents\PFE\analysededonneesfinancieres\spark-pubsub\project\target\scala-2.12\sbt-1.0\resolution-cache\reports\default-spark-pubsub-build-runtime-internal.xml
+[debug] 	report for default#spark-pubsub-build;0.1.0-SNAPSHOT test-internal produced in C:\Users\Victor HENRIO\Documents\PFE\analysededonneesfinancieres\spark-pubsub\project\target\scala-2.12\sbt-1.0\resolution-cache\reports\default-spark-pubsub-build-test-internal.xml
+[debug] 	report for default#spark-pubsub-build;0.1.0-SNAPSHOT plugin produced in C:\Users\Victor HENRIO\Documents\PFE\analysededonneesfinancieres\spark-pubsub\project\target\scala-2.12\sbt-1.0\resolution-cache\reports\default-spark-pubsub-build-plugin.xml
+[debug] 	report for default#spark-pubsub-build;0.1.0-SNAPSHOT pom produced in C:\Users\Victor HENRIO\Documents\PFE\analysededonneesfinancieres\spark-pubsub\project\target\scala-2.12\sbt-1.0\resolution-cache\reports\default-spark-pubsub-build-pom.xml
+[debug] 	report for default#spark-pubsub-build;0.1.0-SNAPSHOT scala-tool produced in C:\Users\Victor HENRIO\Documents\PFE\analysededonneesfinancieres\spark-pubsub\project\target\scala-2.12\sbt-1.0\resolution-cache\reports\default-spark-pubsub-build-scala-tool.xml
+[debug] 	resolve done (4497ms resolve - 4708ms download)
+[info] Done updating.
