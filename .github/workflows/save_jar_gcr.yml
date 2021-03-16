@@ -28,8 +28,14 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Move Dir
+      - name: see pwd
         run: pwd
+      - name: see arround
+        run: ls
+      - name: movedir
+        run: cd scala
+      - name: movedir
+        run: cd projetv0
       - name: Build Fat Jar
         run: sbt assembly
 
