@@ -7,7 +7,7 @@ on:
 
 
 env:
-  GCS_BUCKET: ${{ secrets.GCS_BUCKET }}
+  GCS_BUCKET: gs://jar-files-pfe/
 
 jobs:
   setup-build-deploy:
@@ -32,7 +32,7 @@ jobs:
         run: cd scala/projetv0 && sbt assembly
       - name: Change Dir
         run: cd scala/projetv0/target/scala-2.12 && ls
-        
+
       - uses: google-github-actions/setup-gcloud@master
         with:
           service_account_key: ${{ secrets.KEY_FILE_GCP }}
