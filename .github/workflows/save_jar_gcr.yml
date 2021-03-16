@@ -32,11 +32,17 @@ jobs:
         run: cd scala/projetv0 && sbt assembly
       - name: Change Dir
         run: cd scala/projetv0/target/scala-2.12 && ls
-
+        
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.KEY_FILE_GCP }}
+          export_default_credentials: true
 
       - id: upload-file
         uses: google-github-actions/upload-cloud-storage@main
         with:
           path: scala/projetv0/target/scala-2.12/projetv0-assembly-0.1.jar
           destination: jar-files-pfe/projetv0-assembly-0.1.jar
+
+
 
