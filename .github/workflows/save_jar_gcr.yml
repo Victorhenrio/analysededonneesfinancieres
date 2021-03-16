@@ -30,6 +30,8 @@ jobs:
           java-version: 1.8
       - name: Change Dir and Build Fat Jar
         run: cd scala/projetv0 && sbt assembly
+      - name: Change Dir
+        run: cd scala/projetv0/target/scala-2.12 && ls
 
 
       - id: upload-file
