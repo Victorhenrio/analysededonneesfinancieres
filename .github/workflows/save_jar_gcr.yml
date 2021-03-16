@@ -33,11 +33,11 @@ jobs:
       - name: see arround
         run: ls
       - name: movedir
-        run: cd scala
+        run: cd .\scala
       - name: see arround
         run: ls
       - name: movedir
-        run: cd projetv0
+        run: cd .\projetv0
       - name: Build Fat Jar
         run: sbt assembly
 
