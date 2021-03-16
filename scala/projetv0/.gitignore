@@ -1,0 +1,6 @@
+target/*
+project/target/*
+target/scala-2.11/projetv0-assembly-0.1.jar
+.idea/*
+*.class
+*.cache
