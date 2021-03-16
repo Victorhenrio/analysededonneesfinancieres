@@ -32,10 +32,9 @@ jobs:
         run: cd scala/projetv0 && sbt assembly
 
 
-      - name: Build
-        run: |-
-          make publish
+      - id: upload-file
+        uses: google-github-actions/upload-cloud-storage@main
+        with:
+          path: /scalaz/projetv0/target/scala-2.12/projetv0-assembly-0.1.jar
+          destination: jar-files-pfe/projetv0-assembly-0.1.jar
 
-      - name: Deploy
-        run: |-
-          gsutil -m rsync -R output gs://jar-files-pfe
