@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup - gcloud / gsutil
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud
         with:
           service_account_key: ${{ secrets.KEY_FILE_GCP }}
           project_id: pfe-data-finnhub
