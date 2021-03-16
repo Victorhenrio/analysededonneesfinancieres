@@ -1,22 +1,30 @@
-name: CI CD
+name: Build and Deploy to Google Cloud Storage
 
 on:
   push:
-    branches: [ develop ]
+    branches:
+    - develop
 
 
-stages:
-  - build
-  - upload
+env:
+  GCS_BUCKET: ${{ secrets.GCS_BUCKET }}
 
-steps : 
-  
-  build:
-
+jobs:
+  setup-build-deploy:
+    name: Setup, Build, and Deploy
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
       - uses: actions/checkout@v2
+      - name: Setup - gcloud / gsutil
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.KEY_FILE_GCP }}
+          project_id: pfe-data-finnhub
+          export_default_credentials: true
+
+
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
         with:
@@ -25,14 +33,10 @@ steps :
         run: sbt assembly
 
 
+      - name: Build
+        run: |-
+          make publish
 
-  upload:
-    title: "Uploading library jar to GS..."
-    type: "freestyle"
-    stage: "upload"
-    arguments:
-      image: "google/cloud-sdk:slim"
-      commands:
-        - echo $KEY_FILE | base64 --decode > key_file.json
-        - gcloud auth activate-service-account --key-file=key_file.json
-        - curl https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.12.2/scala-library-2.12.2.jar | gsutil cp - gs://anna-demo-bucket/scala-library-2.12.2.jar
+      - name: Deploy
+        run: |-
+          gsutil -m rsync -R output gs://jar-files-pfe
