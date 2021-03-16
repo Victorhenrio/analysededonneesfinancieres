@@ -38,7 +38,7 @@ jobs:
         with:
           credentials: ${{ secrets.KEY_FILE_GCP }}
           path: scala/projetv0/target/scala-2.12/projetv0-assembly-0.1.jar
-          destination: jar-files-pfe/projetv0-assembly-0.1.jar
+          destination: jar-files-pfe/
 
 
 
