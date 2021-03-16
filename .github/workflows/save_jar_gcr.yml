@@ -28,6 +28,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Move Dir
+        run: cd scala/projetv0
       - name: Build Fat Jar
         run: sbt assembly
 
