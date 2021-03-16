@@ -34,6 +34,8 @@ jobs:
         run: ls
       - name: movedir
         run: cd scala
+      - name: see arround
+        run: ls
       - name: movedir
         run: cd projetv0
       - name: Build Fat Jar
